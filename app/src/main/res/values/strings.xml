@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">MORDO</string>
+<string name="accessibility_description">MORDO reads visible on-screen text and the current app name only while protection is enabled, so it can detect user-configured blocked content and place a blocking screen over it. This information stays on the device.</string>
+<string name="admin_description">Adds an extra confirmation step before MORDO can be removed. It does not make removal impossible.</string>
+</resources>

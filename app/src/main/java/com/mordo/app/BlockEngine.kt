@@ -22,6 +22,7 @@ object BlockEngine {
     )
 
     fun shouldBlock(context:Context, packageName:String, visibleText:String):Boolean {
+        if(packageName=="com.android.settings" && shouldProtectSystemSettings(context,visibleText)) return true
         if(!Prefs.isEnabled(context) || packageName==context.packageName) return false
 
         if(Prefs.focusActive(context) && !focusAllowed(context,packageName)) return true
@@ -48,6 +49,19 @@ object BlockEngine {
         }
 
         return false
+    }
+
+    private fun shouldProtectSystemSettings(context:Context,visibleText:String):Boolean{
+        if(Prefs.settingsUnlocked(context) || Prefs.systemSetupActive(context)) return false
+        val t=visibleText.lowercase()
+        if(!t.contains("mordo")) return false
+        val danger=listOf(
+            "uninstall","force stop","deactivate","device admin","accessibility",
+            "clear storage","clear data","delete app",
+            "désinstaller","désactiver","forcer l'arrêt","effacer les données",
+            "إلغاء التثبيت","إلغاء تثبيت","إيقاف إجباري","مسح البيانات","إمكانية الوصول"
+        )
+        return danger.any{t.contains(it)}
     }
 
     private fun focusAllowed(context:Context,pkg:String):Boolean{

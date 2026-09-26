@@ -157,7 +157,7 @@ class MainActivity:Activity(){
             .setTitle("Enable MORDO blocking")
             .setMessage("MORDO needs Accessibility access to detect the current app and visible text on screen so it can block websites, keywords and selected apps. MORDO does not use this permission to click, type, purchase, message, or control the device for you. Blocking data stays on this device.")
             .setNegativeButton("Cancel",null)
-            .setPositiveButton("Open settings"){_,_->startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))}
+            .setPositiveButton("Open settings"){_,_->Prefs.beginSystemSetup(this);startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))}
             .show()
     }
 
@@ -167,6 +167,7 @@ class MainActivity:Activity(){
             Toast.makeText(this,"Removal protection is already active",Toast.LENGTH_SHORT).show()
             return
         }
+        Prefs.beginSystemSetup(this)
         startActivity(Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply{
             putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN,admin)
             putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,

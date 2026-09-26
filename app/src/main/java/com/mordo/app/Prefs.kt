@@ -24,6 +24,7 @@ object Prefs {
     private const val FOCUS_SCHEDULE="focus_schedule"
     private const val FOCUS_START="focus_start"
     private const val FOCUS_END="focus_end"
+    private const val SYSTEM_SETUP_UNTIL="system_setup_until"
 
     const val MODE_MYSELF="MYSELF"
     const val MODE_FRIEND="FRIEND"
@@ -80,6 +81,8 @@ object Prefs {
     fun verifyFriendPin(c:Context,pin:String)=p(c).getString(FRIEND_PIN,"")==hash(pin)
 
     fun settingsUnlocked(c:Context)=System.currentTimeMillis()<p(c).getLong(SETTINGS_UNLOCK_UNTIL,0L)
+    fun beginSystemSetup(c:Context,minutes:Int=3)=p(c).edit().putLong(SYSTEM_SETUP_UNTIL,System.currentTimeMillis()+minutes*60_000L).apply()
+    fun systemSetupActive(c:Context)=System.currentTimeMillis()<p(c).getLong(SYSTEM_SETUP_UNTIL,0L)
     fun unlockSettings(c:Context,minutes:Int=5)=p(c).edit().putLong(SETTINGS_UNLOCK_UNTIL,System.currentTimeMillis()+minutes*60_000L).apply()
     fun lockSettings(c:Context)=p(c).edit().remove(SETTINGS_UNLOCK_UNTIL).apply()
 

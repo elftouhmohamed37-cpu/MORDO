@@ -15,16 +15,8 @@
         android:icon="@drawable/ic_mordo"
         android:roundIcon="@drawable/ic_mordo"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="false"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".FocusAllowedAppsActivity" android:exported="false" />
-        <activity android:name=".FocusActivity" android:exported="false" />
-        <activity android:name=".ProtectionModeActivity" android:exported="false" />
-        <activity android:name=".ManageAppsActivity" android:exported="false" />
-        <activity android:name=".ProtectionSettingsActivity" android:exported="false" />
-        <activity android:name=".TextListActivity" android:exported="false" />
-        <activity android:name=".GateActivity" android:excludeFromRecents="true" android:exported="false" />
-        <activity android:name=".MyselfActivity" android:excludeFromRecents="true" android:exported="false" />
 
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
@@ -50,7 +42,7 @@
             android:name=".MordoDeviceAdminReceiver"
             android:description="@string/admin_description"
             android:exported="true"
-            android:label="MORDO protection"
+            android:label="MORDO removal protection"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data android:name="android.app.device_admin" android:resource="@xml/device_admin" />
             <intent-filter>

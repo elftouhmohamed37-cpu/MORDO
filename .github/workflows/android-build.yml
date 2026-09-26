@@ -1,55 +1,44 @@
 name: Build MORDO Android
-
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
-
 permissions:
   contents: read
-
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-
       - name: Set up Java 17
         uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "17"
-
       - name: Set up Android SDK
         uses: android-actions/setup-android@v4
         with:
           packages: "platform-tools"
-
       - name: Install Android API 36
         run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
-
+      - name: Decode bundled MORDO interface
+        run: mkdir -p app/src/main/assets && base64 -d app/src/main/assets/index.html.gz.b64 | gunzip > app/src/main/assets/index.html
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.11.1"
-
       - name: Build debug APK
         run: gradle --no-daemon :app:assembleDebug
-
       - name: Build release bundle
         run: gradle --no-daemon :app:bundleRelease
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: MORDO-debug-APK
+          name: MORDO-modern-APK
           path: app/build/outputs/apk/debug/app-debug.apk
-
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
-          name: MORDO-release-AAB-unsigned
+          name: MORDO-modern-AAB-unsigned
           path: app/build/outputs/bundle/release/app-release.aab

@@ -2,6 +2,7 @@ package com.mordo.app
 
 import android.content.Context
 import java.security.MessageDigest
+import java.util.Calendar
 
 object Prefs {
     private const val NAME="mordo_prefs"
@@ -19,6 +20,10 @@ object Prefs {
     private const val SETTINGS_UNLOCK_UNTIL="settings_unlock_until"
     private const val PENDING_UNLOCK_AT="pending_unlock_at"
     private const val FOCUS_UNTIL="focus_until"
+    private const val FOCUS_ALLOWED="focus_allowed"
+    private const val FOCUS_SCHEDULE="focus_schedule"
+    private const val FOCUS_START="focus_start"
+    private const val FOCUS_END="focus_end"
 
     const val MODE_MYSELF="MYSELF"
     const val MODE_FRIEND="FRIEND"
@@ -81,7 +86,7 @@ object Prefs {
     fun pendingUnlockAt(c:Context)=p(c).getLong(PENDING_UNLOCK_AT,0L)
     fun scheduleDelayedUnlock(c:Context)=p(c).edit().putLong(PENDING_UNLOCK_AT,System.currentTimeMillis()+delayMinutes(c)*60_000L).apply()
     fun clearPendingUnlock(c:Context)=p(c).edit().remove(PENDING_UNLOCK_AT).apply()
-    fun applyPendingUnlockIfDue(c:Context):Boolean {
+    fun applyPendingUnlockIfDue(c:Context):Boolean{
         val at=pendingUnlockAt(c)
         if(at>0 && System.currentTimeMillis()>=at){
             unlockSettings(c)
@@ -94,10 +99,38 @@ object Prefs {
     fun focusUntil(c:Context)=p(c).getLong(FOCUS_UNTIL,0L)
     fun startFocus(c:Context,minutes:Int)=p(c).edit().putLong(FOCUS_UNTIL,System.currentTimeMillis()+minutes*60_000L).apply()
     fun stopFocus(c:Context)=p(c).edit().remove(FOCUS_UNTIL).apply()
-    fun focusActive(c:Context)=focusUntil(c)>System.currentTimeMillis()
 
-    private fun hash(s:String):String {
+    fun focusAllowedApps(c:Context)=p(c).getStringSet(FOCUS_ALLOWED,emptySet())?.toSet()?:emptySet()
+    fun setFocusAllowedApps(c:Context,v:Set<String>)=p(c).edit().putStringSet(FOCUS_ALLOWED,v).apply()
+
+    fun focusScheduleEnabled(c:Context)=p(c).getBoolean(FOCUS_SCHEDULE,false)
+    fun setFocusScheduleEnabled(c:Context,v:Boolean)=p(c).edit().putBoolean(FOCUS_SCHEDULE,v).apply()
+    fun focusStartMinutes(c:Context)=p(c).getInt(FOCUS_START,22*60+30)
+    fun focusEndMinutes(c:Context)=p(c).getInt(FOCUS_END,6*60)
+    fun setFocusTimes(c:Context,start:Int,end:Int)=p(c).edit()
+        .putInt(FOCUS_START,start.coerceIn(0,1439))
+        .putInt(FOCUS_END,end.coerceIn(0,1439)).apply()
+
+    fun focusActive(c:Context):Boolean{
+        if(focusUntil(c)>System.currentTimeMillis()) return true
+        if(!focusScheduleEnabled(c)) return false
+        val cal=Calendar.getInstance()
+        val now=cal.get(Calendar.HOUR_OF_DAY)*60+cal.get(Calendar.MINUTE)
+        val start=focusStartMinutes(c)
+        val end=focusEndMinutes(c)
+        return if(start==end) true
+        else if(start<end) now in start until end
+        else now>=start || now<end
+    }
+
+    fun formatMinutes(v:Int):String{
+        val h=(v/60)%24
+        val m=v%60
+        return String.format("%02d:%02d",h,m)
+    }
+
+    private fun hash(s:String):String{
         val bytes=MessageDigest.getInstance("SHA-256").digest(s.toByteArray())
-        return bytes.joinToString("") { "%02x".format(it) }
+        return bytes.joinToString(""){"%02x".format(it)}
     }
 }

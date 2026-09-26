@@ -12,6 +12,8 @@
     <application
         android:allowBackup="false"
         android:label="MORDO"
+        android:icon="@drawable/ic_mordo"
+        android:roundIcon="@drawable/ic_mordo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 

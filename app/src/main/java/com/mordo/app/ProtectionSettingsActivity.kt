@@ -47,7 +47,7 @@ class ProtectionSettingsActivity:Activity(){
                 }
             }
         }
-        card.addView(sw);card.addView(Theme.sub(this,sub).apply{setPadding(4,4,0,0)})
+        card.addView(sw);card.addView(Theme.sub(this@ProtectionSettingsActivity,sub).apply{setPadding(4,4,0,0)})
         root.addView(card);root.addView(Theme.spacer(this,12))
     }
 

@@ -8,9 +8,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: mordo-android-main
-  cancel-in-progress: true
 
 jobs:
   build:

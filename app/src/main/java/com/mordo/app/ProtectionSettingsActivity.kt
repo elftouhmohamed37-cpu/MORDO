@@ -39,7 +39,7 @@ class ProtectionSettingsActivity:Activity(){
             text=title;isChecked=checked;textSize=17f
             setOnCheckedChangeListener{button:CompoundButton,value:Boolean->
                 if(value){apply(key,true)}
-                else if(Prefs.settingsUnlocked(this)) apply(key,false)
+                else if(Prefs.settingsUnlocked(this@ProtectionSettingsActivity)) apply(key,false)
                 else{
                     button.setOnCheckedChangeListener(null);button.isChecked=true
                     pendingKey=key

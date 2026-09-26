@@ -1,6 +1,7 @@
 package com.mordo.app
 
 import android.content.Context
+import android.content.Intent
 
 object BlockEngine {
     private val browsers=setOf(
@@ -9,11 +10,23 @@ object BlockEngine {
         "com.sec.android.app.sbrowser","com.duckduckgo.mobile.android"
     )
 
+    private val essentialPackages=setOf(
+        "com.android.systemui",
+        "com.android.phone",
+        "com.android.dialer",
+        "com.google.android.dialer",
+        "com.android.mms",
+        "com.google.android.apps.messaging",
+        "com.huawei.contacts",
+        "com.huawei.message"
+    )
+
     fun shouldBlock(context:Context, packageName:String, visibleText:String):Boolean {
         if(!Prefs.isEnabled(context) || packageName==context.packageName) return false
 
-        val blockedApps=Prefs.blockedApps(context)
-        if((Prefs.appBlock(context) || Prefs.focusActive(context)) && blockedApps.contains(packageName)) return true
+        if(Prefs.focusActive(context) && !focusAllowed(context,packageName)) return true
+
+        if(Prefs.appBlock(context) && Prefs.blockedApps(context).contains(packageName)) return true
 
         val text=visibleText.lowercase()
         val keywords=Prefs.keywords(context)
@@ -34,6 +47,15 @@ object BlockEngine {
                 }) return true
         }
 
+        return false
+    }
+
+    private fun focusAllowed(context:Context,pkg:String):Boolean{
+        if(pkg==context.packageName || pkg in essentialPackages) return true
+        if(Prefs.focusAllowedApps(context).contains(pkg)) return true
+        val homeIntent=Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+        val home=context.packageManager.resolveActivity(homeIntent,0)?.activityInfo?.packageName
+        if(!home.isNullOrBlank() && pkg==home) return true
         return false
     }
 

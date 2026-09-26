@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace = "com.mordo.app"
+    namespace = "com.mordo.blocker"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.mordo.app"
+        applicationId = "com.mordo.blocker"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "0.4.0"
+        versionCode = 1
+        versionName = "1.0.0-beta1"
     }
 
     buildTypes {

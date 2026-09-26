@@ -36,7 +36,7 @@ class TextListActivity:Activity(){
         val addRow=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL}
         val input=EditText(this).apply{
             hint=if(type=="domains")"example.com" else "word or phrase"
-            singleLine=true; background=Theme.card(); setPadding(18,16,18,16)
+            isSingleLine=true; background=Theme.card(); setPadding(18,16,18,16)
         }
         addRow.addView(input,LinearLayout.LayoutParams(0,-2,1f))
         val add=Button(this).apply{

@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <activity android:name=".FocusAllowedAppsActivity" android:exported="false" />
         <activity android:name=".FocusActivity" android:exported="false" />
         <activity android:name=".ProtectionModeActivity" android:exported="false" />
         <activity android:name=".ManageAppsActivity" android:exported="false" />
